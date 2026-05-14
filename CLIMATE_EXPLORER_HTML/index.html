@@ -1,0 +1,951 @@
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Climate Explorer · Anàlisi global d'emissions de CO₂ · Grup 06</title>
+  <meta name="description" content="Anàlisi multidimensional del desenvolupament econòmic, les emissions de CO₂ i el seu impacte global. UAB · DADM 2025–26." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%236b7c5f'/%3E%3Cpath d='M16 7c-4 4-8 8-8 12a8 8 0 0 0 16 0c0-4-4-8-8-12z' fill='%2314120f'/%3E%3C/svg%3E" />
+</head>
+
+<body>
+
+<div class="scroll-progress"></div>
+
+<nav class="section-dots" aria-label="Section navigation">
+  <a href="#hero"          title="Inici"></a>
+  <a href="#question"      title="La pregunta"></a>
+  <a href="#methodology"   title="Mètode"></a>
+  <a href="#hypotheses"    title="Hipòtesis"></a>
+  <a href="#global"        title="Imatge global"></a>
+  <a href="#ranking"       title="Top emissors"></a>
+  <a href="#sectors"       title="Sectors"></a>
+  <a href="#wealth"        title="Riquesa"></a>
+  <a href="#trade"         title="Comerç"></a>
+  <a href="#inequality"    title="Desigualtat"></a>
+  <a href="#health"        title="Salut"></a>
+  <a href="#cluster"       title="Clústers"></a>
+  <a href="#pca"           title="PCA &amp; Correlacions"></a>
+  <a href="#suecia"        title="Espanya vs Suècia"></a>
+  <a href="#conclusions"   title="Conclusions"></a>
+  <a href="#team"          title="Equip"></a>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<header class="nav">
+  <div class="nav-inner">
+    <a href="#hero" class="brand" style="border:none">
+      <span class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#14120f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2C8 6 4 10 4 14a8 8 0 0 0 16 0c0-4-4-8-8-12z"/>
+        </svg>
+      </span>
+      <span>Climate Explorer</span>
+      <span class="brand-meta">UAB · Grup 06</span>
+    </a>
+    <div class="nav-links">
+      <a href="#question">Pregunta</a>
+      <a href="#methodology">Mètode</a>
+      <a href="#hypotheses">Hipòtesis</a>
+      <a href="#global">Global</a>
+      <a href="#ranking">Ranking</a>
+      <a href="#sectors">Sectors</a>
+      <a href="#wealth">Riquesa</a>
+      <a href="#trade">Comerç</a>
+      <a href="#inequality">Desigualtat</a>
+      <a href="#health">Salut</a>
+      <a href="#cluster">Clústers</a>
+      <a href="#pca">PCA</a>
+      <a href="#suecia">Esp vs Sue</a>
+      <a href="#conclusions">Conclusions</a>
+      <a href="#team">Equip</a>
+      <a href="https://github.com/mariasiles/EmissionsCO2_Visualitzacio" target="_blank" rel="noopener" class="nav-cta">GitHub ↗</a>
+    </div>
+  </div>
+</header>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- HERO                                                          sage  -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section id="hero" class="hero" data-tone="green">
+  <div class="hero-grid"></div>
+  <div class="container wide" style="position:relative;z-index:2">
+    <div class="eyebrow">Visualització de Dades · UAB · Curs 2025–26</div>
+    <h1>Anàlisi global d'emissions de CO₂<br/><em style="font-size:0.55em">Una història global del CO₂.</em></h1>
+    <p class="hero-sub">
+      Combinem quinze datasets oficials en un únic <span class="mono">master_dataset</span> per
+      explorar la relació entre desenvolupament econòmic, emissions, comerç internacional i salut.
+      Quins països han crescut sense augmentar les seves emissions? On s'amaga la contaminació quan es deslocalitza?
+    </p>
+
+    <div class="hero-meta">
+      <div><b>Projecte</b> Anàlisi global d'emissions de CO₂</div>
+      <div><b>Grup</b> 06 · DADM 2025–26</div>
+      <div><b>Fonts</b> OWID · WHO · World Bank · UNDP</div>
+      
+    </div>
+  </div>
+  <div class="scroll-cue">scroll</div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- §00 THE QUESTION                                              moss  -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section id="question" data-tone="red">
+  <div class="container narrow fade-section">
+    <div class="eyebrow">§ 00 — la pregunta</div>
+    <h2>¿Es pot créixer sense augmentar el CO₂?</h2>
+    <p class="lead">
+      Històricament cada salt de productivitat ha vingut acompanyat d'un salt d'emissions.
+      Però l'última dècada introdueix una possibilitat nova — el desacoblament:
+      països que augmenten el seu PIB <strong>mentre</strong> redueixen les seves emissions.
+    </p>
+    <div class="section-body">
+      <p>
+        Aquest projecte explora dos blocs de preguntes. Primer, què mostren les dades
+        sobre la relació entre desenvolupament i emissions. Segon, quins països escapen del
+        patró i com ho aconsegueixen. 
+      </p>
+    </div>
+    <blockquote>
+      La pregunta clau no és <em>quant emet cada país</em>, sinó quina relació té cada país
+      entre la seva riquesa, la seva petjada de carboni i la salut dels seus habitants.
+      <cite>Marc analític del projecte</cite>
+    </blockquote>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- §01 METHODOLOGY                                              olive  -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section id="methodology" data-tone="teal">
+  <div class="container fade-section">
+    <div class="eyebrow">§ 01 — mètode</div>
+    <h2>De quinze datasets a un sol dataset <span style="color:var(--accent);font-style:normal">Master</span></h2>
+
+    <div class="section-body">
+      <p>
+        El cor del projecte és el <span class="mono-tag">master_dataset.csv</span> — una taula
+        unificada de 23.408 files que combina quinze datasets independents sota una clau comuna
+        <strong>(país, any)</strong>. Sense aquesta fusió, no podríem creuar el PIB amb les
+        emissions, ni les emissions amb l'esperança de vida, ni la riquesa amb la desigualtat.
+      </p>
+      <p>
+        Cada font té el seu propi format, nomenclatura i interval temporal. La integració
+        ha exigit normalitzar noms de països (<span class="mono">USA</span> →
+        <span class="mono">United States</span>), interpolar buits temporals, completar valors
+        nuls allà on era estadísticament prudent, i acordar una sola unitat de mesura per indicador.
+      </p>
+    </div>
+
+    <h3>Datasets d'entrada</h3>
+    <ul class="dataset-list">
+      <li>annual-co2-emissions-per-country</li>
+      <li>consumption-co2-emissions</li>
+      <li>ghg-emissions-by-sector</li>
+      <li>gdp-per-capita-worldbank</li>
+      <li>human-development-index</li>
+      <li>economic-inequality-gini-index</li>
+      <li>life-expectancy</li>
+      <li>chronic-respiratory-diseases-death-rate</li>
+      <li>share-electricity-low-carbon</li>
+      <li>primary-energy-cons</li>
+      <li>annual-change-forest-area</li>
+      <li>monthly-average-surface-temperatures</li>
+      <li>value-of-exported-goods-and-services</li>
+      <li>population</li>
+      <li>datacenters_per_pais</li>
+    </ul>
+
+    <h3>Pipeline d'integració</h3>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="step">01 · Ingest</div>
+        <h4>Recopilació</h4>
+        <p>Descàrrega de quinze fonts oficials — OWID, World Bank, WHO, UNDP.</p>
+      </div>
+      <div class="flow-step">
+        <div class="step">02 · Clean</div>
+        <h4>Neteja</h4>
+        <p>Tractament de nulls, noms de països, formats temporals, unitats coherents.</p>
+      </div>
+      <div class="flow-step">
+        <div class="step">03 · Merge</div>
+        <h4>Unió</h4>
+        <p>Join per <span class="mono">(Entity, Year)</span>. Selecció de variables rellevants.</p>
+      </div>
+      <div class="flow-step">
+        <div class="step">04 · Enrich</div>
+        <h4>Enriquiment</h4>
+        <p>Càlcul de variables derivades: CO₂/càpita, intensitat carboni, balanç comercial.</p>
+      </div>
+    </div>
+
+    <h3>El dataset resultant</h3>
+    <div class="kpi-strip">
+      <div class="kpi-block">
+        <div class="kpi-label">Files</div>
+        <div class="kpi-value">23 408</div>
+        <div class="kpi-sub">país–any observacions</div>
+      </div>
+      <div class="kpi-block">
+        <div class="kpi-label">Variables</div>
+        <div class="kpi-value">20</div>
+        <div class="kpi-sub">indicadors creuats</div>
+      </div>
+      <div class="kpi-block">
+        <div class="kpi-label">Cobertura</div>
+        <div class="kpi-value">201<span class="unit"> països</span></div>
+        <div class="kpi-sub">+ regions agregades</div>
+      </div>
+      <div class="kpi-block">
+        <div class="kpi-label">Període</div>
+        <div class="kpi-value">1949-2024<span class="unit"></span></div>
+        <div class="kpi-sub">75 anys de sèrie temporal</div>
+      </div>
+    </div>
+
+    <p class="subtle" style="margin-top:24px">
+      <strong style="color:var(--text)">Variables del master_dataset:</strong>
+      <span class="mono-tag">co2_prod</span>
+      <span class="mono-tag">co2_cons</span>
+      <span class="mono-tag">co2_prod_pc</span>
+      <span class="mono-tag">co2_cons_pc</span>
+      <span class="mono-tag">co2_trade_balance</span>
+      <span class="mono-tag">carbon_intensity</span>
+      <span class="mono-tag">population</span>
+      <span class="mono-tag">gdp_pc</span>
+      <span class="mono-tag">hdi</span>
+      <span class="mono-tag">gini</span>
+      <span class="mono-tag">life_exp</span>
+      <span class="mono-tag">resp_death_rate</span>
+      <span class="mono-tag">exports_usd</span>
+      <span class="mono-tag">exports_share_gdp</span>
+      <span class="mono-tag">energy_twh</span>
+      <span class="mono-tag">pct_lowcarbon</span>
+      <span class="mono-tag">forest_change_ha</span>
+    </p>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- §02 HYPOTHESES                                                dust  -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section id="hypotheses" data-tone="purple">
+  <div class="container narrow fade-section">
+    <div class="eyebrow">§ 02 — hipòtesis</div>
+    <h2>Sis preguntes per posar a prova</h2>
+    <p class="lead">
+      Abans de mirar gràfics, hem formulat hipòtesis. La idea: que els gràfics no decidissin
+      la història, sinó que la confirmessin o refutessin amb evidència empírica.
+    </p>
+
+    <ol class="hypothesis-list">
+      <li>
+        <span class="h-num">Hipòtesi 1</span>
+        <p class="h-title">Existeix una relació positiva entre el PIB per càpita i les emissions de CO₂ per càpita.</p>
+      </li>
+      <li>
+        <span class="h-num">Hipòtesi 2</span>
+        <p class="h-title">Els països amb un HDI més alt tendeixen a generar més emissions de CO₂.</p>
+      </li>
+      <li>
+        <span class="h-num">Hipòtesi 3</span>
+        <p class="h-title">Els països desenvolupats són els principals responsables de les emissions històriques acumulades.</p>
+      </li>
+      <li>
+        <span class="h-num">Hipòtesi 4</span>
+        <p class="h-title">Existeix una relació entre emissions de CO₂ i qualitat de vida (esperança de vida).</p>
+      </li>
+      <li>
+        <span class="h-num">Hipòtesi 5</span>
+        <p class="h-title">El comerç internacional contribueix al desplaçament de les emissions cap a països exportadors.</p>
+      </li>
+      <li>
+        <span class="h-num">Hipòtesi 6</span>
+        <p class="h-title">Les noves tecnologies (data centers, IA) contribueixen de manera creixent a les emissions globals.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- §03 GLOBAL                                                    rust  -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section id="global" data-tone="orange">
+  <div class="container narrow fade-section">
+    <div class="eyebrow">§ 03 — imatge global</div>
+    <h2>Cent-setanta-cinc anys <em>en una sola corba</em></h2>
+
+    <div class="section-body">
+      <p>
+        Cap visualització resumeix millor el segle XX i XXI que aquesta. Entre 1850 i 2024,
+        les emissions globals de CO₂ han passat de pràcticament zero a més de
+        <strong>37 gigatonnes anuals</strong>. Cada esdeveniment històric deixa una empremta
+        visible al gràfic.
+      </p>
+    </div>
+
+    <figure class="fig">
+      <img src="grafics_dark/2.1_evolucio_global_co2.png" alt="Evolució global de les emissions de CO₂ 1850–2024" loading="lazy" />
+      <figcaption>
+        <span class="fig-num">Figura 1 — area chart</span>
+        <span class="fig-title">Evolució de les emissions globals de CO₂ entre 1850 i 2024.</span>
+        Gràfic d'àrea en to vermell per transmetre impacte. Les franges verticals marquen
+        esdeveniments històrics clau per donar explicació causal als canvis de tendència.
+      </figcaption>
+    </figure>
+
+    <p class="pull">El 88% del CO₂ acumulat des de 1850 prové de menys del 20% de la població mundial.</p>
+
+    <p>
+      Per entendre <em>qui</em> ha generat aquestes emissions, mirem ara els països responsables
+      del total acumulat històric, dels emissors actuals, i dels que emeten més per càpita.
+    </p>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- §04 RANKING                                                  clay   -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section id="ranking" data-tone="red">
+  <div class="container narrow fade-section">
+    <div class="eyebrow">§ 04 — els grans emissors</div>
+    <h2>Responsables de les emissions de CO₂</h2>
+    <p class="lead">
+      La història del CO₂ no es reparteix equitativament. Una desena de països concentren
+      més de tres quartes parts de tot el CO₂ acumulat des de l'inici de la industrialització.
+    </p>
+
+    <figure class="fig">
+      <img src="grafics_dark/2.2a_top_emissors_historics.png" alt="Top 15 emissors històrics acumulats" loading="lazy" />
+      <figcaption>
+        <span class="fig-num">Figura 2 — barres horitzontals</span>
+        <span class="fig-title">Top 15 països per emissions acumulades històriques de CO₂.</span>
+        Rànquing de variables categòriques (països) respecte una quantitativa contínua
+        (Gt CO₂ acumulades). El color vermell destaca el top 2 d'emissors històrics que
+        superen desproporcionadament la resta.
+      </figcaption>
+    </figure>
+
+    <p>
+      Però el rànquing actual ha canviat notablement. Mentre els Estats Units i Europa van dominar el segle XX, la Xina ha passat a ocupar les primeres posicions en el segle XXI.
+    </p>
+
+    <p class="interactive-hint">interactive · bar chart race</p>
+    <figure class="fig wide">
+      <div class="iframe-wrap">
+        <iframe data-src="../GLOBAL/grafics/bar_chart_race.html" height="640" loading="lazy" title="Bar chart race annual CO2 emissions" style="background:#1b1e23"></iframe>
+      </div>
+      <figcaption>
+        <span class="fig-num">Figura 3 — bar chart race</span>
+        <span class="fig-title">Top 15 emissors anuals de CO₂ — animat 1950→2024.</span>
+        El rànquing es reordena en directe. Es veu com els EUA passen de líder absolut a
+        segon lloc, com la Xina arriba al cim i com l'Índia escala posicions. Premi ▶ play
+        per veure l'animació o moveu el slider per saltar a un any concret.
+      </figcaption>
+    </figure>
+
+    <p class="interactive-hint">interactive · mapa animat</p>
+    <figure class="fig wide">
+      <div class="iframe-wrap">
+        <iframe data-src="../GLOBAL/grafics/mapa_co2_animat.html" height="560" loading="lazy" title="Mapa CO2 animat per país" style="background:#1b1e23"></iframe>
+      </div>
+      <figcaption>
+        <span class="fig-num">Interactiu — mapa animat</span>
+        <span class="fig-title">Emissions de CO₂ per país — evolució geogràfica.</span>
+        Mapa mundial animat que mostra la distribució geogràfica de les emissions al llarg del temps.
+      </figcaption>
+    </figure>
+
+    <p>
+      La mateixa dada en el temps revela el moment exacte del relleu: cap al 2006, la corba
+      de la Xina creua la dels Estats Units i no para.
+    </p>
+
+    <figure class="fig">
+      <img src="grafics_dark/2.2c_evolucio_top8.png" alt="Evolució dels 8 principals emissors" loading="lazy" />
+      <figcaption>
+        <span class="fig-num">Figura 4 — multi-line chart</span>
+        <span class="fig-title">Top 8 països emissors de CO₂ — evolució temporal.</span>
+        Comparativa de tendències per país al llarg del temps. Cada línia un país.
+        L'eix X comença el 1950, primer any amb dades per a tots els seleccionats.
+      </figcaption>
+    </figure>
+
+    <p>
+      L'absoluta no ho és tot. Mirat per habitant, el panorama canvia: petites economies
+      riques del Golf Pèrsic o països amb indústries energètiques fortes, superen els
+      gegants industrials.
+    </p>
+
+    <figure class="fig">
+      <img src="grafics_dark/2.2d_co2_percapita_top20.png" alt="Top 20 països per emissions per càpita" loading="lazy" />
+      <figcaption>
+        <span class="fig-num">Figura 5 — barres + referència</span>
+        <span class="fig-title">Top 20 països emissors de CO₂ per càpita.</span>
+        Línia discontínua vermella = mitjana mundial. Comparem una variable quantitativa
+        (t CO₂/càpita) respecte una categòrica (països), amb valor numèric al final de cada
+        barra per evitar haver de llegir l'eix X.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- §05 SECTORS                                                  umber  -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section id="sectors" data-tone="green">
+
+  <div class="container narrow fade-section">
+    <div class="eyebrow">§ 05 — sectors</div>
+    <h2>El pes de cada país</h2>
+    <p class="lead">
+      Fins ara hem vist trajectòries. Aquí parem el temps i veiem el paisatge complet d'un sol any:
+      cada rectangle és un país, i la seva superfície és les seves emissions de CO₂. La Xina i els EUA junts ocupen més de la meitat del mapa.
+    </p>
+  </div>
+
+  <div class="container wide fade-section">
+    <p class="interactive-hint">interactive · treemap</p>
+    <figure class="fig wide">
+      <div class="iframe-wrap">
+        <iframe data-src="../GLOBAL/grafics/treemap_co2.html" height="620" loading="lazy" title="Treemap CO2"></iframe>
+      </div>
+      <figcaption>
+        <span class="fig-num">Interactiu — treemap</span>
+        <span class="fig-title">Treemap del CO₂ global per país i regió.</span>
+        La superfície de cada rectangle és proporcional a les emissions. Fes clic a una regió per ampliar-la.
+      </figcaption>
+    </figure>
+  </div>
+
+  <div class="container narrow fade-section">
+    <p>
+      El treemap mostra el pes absolut. El sunburst afegeix una capa més: organitza els
+      mateixos països per continent a l'anell interior, i desplega cada país a l'anell exterior.
+      D'un cop d'ull es veu quin continent domina i, dins seu, quin país concentra les emissions.
+    </p>
+  </div>
+
+  <div class="container wide fade-section">
+    <p class="interactive-hint">interactive · sunburst</p>
+    <figure class="fig wide">
+      <div class="iframe-wrap">
+        <iframe data-src="../GLOBAL/grafics/sunburst_co2.html" height="620" loading="lazy" title="Sunburst CO2 per sector" style="background:#1b1e23"></iframe>
+      </div>
+      <figcaption>
+        <span class="fig-num">Interactiu — sunburst</span>
+        <span class="fig-title">Emissions de CO₂ per continent (anell interior) i país (anell exterior).</span>
+        Fes clic a un continent per ampliar-lo i veure el detall de cada país dins seu.
+      </figcaption>
+    </figure>
+  </div>
+
+  <div class="container narrow fade-section">
+    <div class="eyebrow">distribució i evolució</div>
+    <h2>D'on <span style="color:var(--accent);font-style:normal">venen</span> les emissions</h2>
+    <p class="lead">
+      Quatre sectors expliquen la immensa majoria de la petjada global: energia, indústria,
+      agricultura i transport. La seva proporció ha canviat amb el temps, però el seu pes
+      conjunt es manté inamovible.
+    </p>
+  </div>
+
+  <div class="container bleed fade-section">
+    <div class="figs-two">
+      <figure class="fig">
+        <img src="grafics_dark/2.3b_sectors_pastis.png" alt="Distribució d'emissió per sector" loading="lazy" />
+        <figcaption>
+          <span class="fig-num">Figura 6 — pie chart</span>
+          <span class="fig-title">Distribució d'emissió de CO₂ per sector.</span>
+          Sectors ordenats de més a menys contaminants en sentit horari.
+        </figcaption>
+      </figure>
+
+      <figure class="fig">
+        <img src="grafics_dark/2.3c_top4_sectors_evolucio.png" alt="Evolució dels 4 sectors top" loading="lazy" />
+        <figcaption>
+          <span class="fig-num">Figura 7 — multi-panel area</span>
+          <span class="fig-title">Evolució dels 4 sectors amb més emissió.</span>
+          Cada sector en un panell separat per reduir la càrrega visual.
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="container narrow fade-section">
+    <div class="eyebrow">fonts i embornals</div>
+    <h2>El CO₂ que <span style="color:var(--accent);font-style:normal">viatja</span></h2>
+    <p class="lead">
+      Produir i consumir no és el mateix. Quan un país fabrica béns per exportar, les emissions
+      queden registrades al seu territori però la demanda és aliena. El mapa de producció versus
+      consum i el diagrama de fluxos revelen aquesta asimetria: algunes economies absorbeixen
+      contaminació invisible darrere de cada importació.
+    </p>
+  </div>
+
+  <div class="container narrow fade-section">
+    <figure class="fig">
+      <img src="grafics_dark/3.2_produccio_vs_consum_co2.png" alt="Producció vs Consum CO2" loading="lazy" />
+      <figcaption>
+        <span class="fig-num">Figura 10 — barres divergents</span>
+        <span class="fig-title">Producció vs Consum de CO₂ per país.</span>
+        Taronja = exportador net d'emissions. Gris = importador net. La Xina destaca com
+        el major exportador de CO₂; els EUA com el major importador.
+      </figcaption>
+    </figure>
+  </div>
+
+  <div class="container narrow fade-section">
+    <p>
+      Emetre no és el mateix que acumular. L'oceà i la terra absorbeixen part del CO₂,
+      però cada any que passa, les fonts creixen més ràpid que els sistemes d'absorció. La diferència
+      — el que no s'absorbeix — s'acumula a l'atmosfera. Aquest gràfic mostra per què la
+      concentració atmosfèrica de CO₂ continua pujant malgrat que els ecosistemes fan la seva feina.
+    </p>
+  </div>
+
+  <div class="container wide fade-section">
+    <p class="interactive-hint">interactive · sources &amp; sinks</p>
+    <figure class="fig wide">
+      <div class="iframe-wrap">
+        <iframe data-src="../GLOBAL/grafics/sources_sinks_co2.html" height="600" loading="lazy" title="Sources and sinks"></iframe>
+      </div>
+      <figcaption>
+        <span class="fig-num">Interactiu — sources &amp; sinks</span>
+        <span class="fig-title">Balanç global del carboni: fonts i embornals (1850–2023).</span>
+        A dalt, el CO₂ emès: combustibles fòssils i canvi d'ús del sòl. A baix, el que absorbeixen
+        l'oceà i la terra. La diferència — el que no s'absorbeix — és el creixement atmosfèric.
+      </figcaption>
+    </figure>
+  </div>
+
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- §06 WEALTH                                                   olive  -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section id="wealth" data-tone="yellow">
+  <div class="container narrow fade-section">
+    <div class="eyebrow">§ 06 — riquesa i desenvolupament</div>
+    <h2>El cost de carboni del progrés</h2>
+    <p class="lead">
+      Les Hipòtesis 1 i 2 es posen a prova aquí: la riquesa econòmica (PIB) i el desenvolupament
+      humà (HDI) es correlacionen amb emissions per càpita. La pregunta interessant no és <em>si</em>
+      hi ha correlació, sinó quant es desvien alguns països d'aquesta corba.
+    </p>
+
+    <figure class="fig">
+      <img src="grafics_dark/3.1a_pib_co2_percapita.png" alt="PIB vs Emissions per càpita" loading="lazy" />
+      <figcaption>
+        <span class="fig-num">Figura 8 — bubble scatter</span>
+        <span class="fig-title">PIB vs Emissions per càpita.</span>
+        Quatre variables alhora — PIB (X), CO₂/càpita (Y), població (mida), regió (color).
+        Escales logarítmiques per comparar països molt dispars.
+        <strong>Spearman r = 0,895.</strong>
+      </figcaption>
+    </figure>
+
+    <figure class="fig">
+      <img src="grafics_dark/3.1b_hdi_co2_percapita.png" alt="HDI vs Emissions per càpita" loading="lazy" />
+      <figcaption>
+        <span class="fig-num">Figura 9 — bubble scatter</span>
+        <span class="fig-title">HDI vs Emissions per càpita.</span>
+        Tot i que l'HDI incorpora salut i educació, la correlació amb emissions és gairebé
+        idèntica (<strong>Spearman = 0,870</strong>): a major desenvolupament humà, més emissions.
+      </figcaption>
+    </figure>
+
+    <blockquote>
+      El model dominant de desenvolupament humà encara passa per cremar més. Però la dispersió
+      entorn la corba demostra que no és l'únic camí possible.
+      <cite>Anàlisi creuada Hipòtesi 1 + 2</cite>
+    </blockquote>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- §07 TRADE                                                    teal   -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section id="trade" data-tone="blue">
+  <div class="container narrow fade-section">
+    <div class="eyebrow">§ 07 — comerç i deslocalització</div>
+    <h2>El CO₂ que <em>s' exporta</em></h2>
+    <p class="lead">
+      Quan un país occidental "redueix" les seves emissions, sovint el que ha reduït és la
+      seva indústria pesant — que s'ha traslladat a Àsia. La Hipòtesi 5 explora aquest
+      desplaçament: les emissions de producció (qui les fa) contra les de consum (qui les utilitza).
+    </p>
+
+  <div class="container narrow fade-section">
+    <p>
+      Per evidenciar més la Hipòtesi 5, mirem la relació entre exportacions econòmiques
+      i emissions. El que un país exporta determina la seva petjada de carboni nacional.
+    </p>
+    <figure class="fig">
+      <img src="grafics_dark/3.5_exportacions_co2.png" alt="Exportacions vs Emissions" loading="lazy" />
+      <figcaption>
+        <span class="fig-num">Figura 13 — scatter log</span>
+        <span class="fig-title">Exportacions vs Emissions de CO₂.</span>
+        Eix X en escala logarítmica. <strong>Spearman = 0,843</strong>: els països que més
+        exporten tendeixen a emetre més. Confirma la deslocalització industrial.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- §08 INEQUALITY                                              amber   -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section id="inequality" data-tone="pink">
+  <div class="container narrow fade-section">
+    <div class="eyebrow">§ 08 — desigualtat</div>
+    <h2>Pobresa energètica <em>que sembla virtut climàtica</em></h2>
+
+    <div class="section-body">
+      <p>
+        Un dels resultats més contraintuïtius del projecte: els països amb més desigualtat
+        sovint tenen menys emissions per càpita. Però això no és bona notícia ambiental —
+        és pobresa energètica estructural. La mitjana baixa perquè la gran majoria de la
+        població no té accés ni capacitat de consum.
+      </p>
+    </div>
+
+    <figure class="fig">
+      <img src="grafics_dark/3.4_gini_co2.png" alt="Gini vs CO2" loading="lazy" />
+      <figcaption>
+        <span class="fig-num">Figura 12 — bubble scatter</span>
+        <span class="fig-title">Índex Gini vs Emissions de CO₂.</span>
+        Eix X: Gini. Eix Y: CO₂/càpita. Mida: població. Color: PIB.
+        <strong>Spearman = −0,462</strong> (correlació moderada-baixa). La relació negativa
+        reflecteix pobresa estructural, no gestió ambiental superior.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- §09 HEALTH                                                   slate  -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section id="health" data-tone="green">
+  <div class="container narrow fade-section">
+    <div class="eyebrow">§ 09 — salut</div>
+    <h2>Quan emetre més es correlaciona amb viure més</h2>
+    <p class="lead">
+      Una de les troballes més delicades del projecte: la correlació positiva entre emissions
+      per càpita i esperança de vida. No és que el CO₂ allargui la vida — és que tots dos són
+      indicadors d'un mateix fenomen subjacent: <em>nivell de desenvolupament</em>.
+    </p>
+
+    <figure class="fig">
+      <img src="grafics_dark/3.6a_co2_esperanca_vida.png" alt="CO2 vs esperança vida" loading="lazy" />
+      <figcaption>
+        <span class="fig-num">Figura 14 — bubble scatter</span>
+        <span class="fig-title">Esperança de vida vs Emissions de CO₂.</span>
+        Mida = població; color = PIB. <strong>Spearman = 0,750</strong>: més emissions,
+        més esperança de vida. La correlació no és causal — el desenvolupament econòmic
+        actua com a variable de confusió.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- §11 CLUSTER + PCA                                            dust   -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section id="cluster" data-tone="teal">
+  <div class="container narrow fade-section">
+    <div class="eyebrow">§ 11 — tipologies</div>
+    <h2>Quatre arquetips d'un mateix planeta</h2>
+    <p class="lead">
+      Un algorisme de clustering identifica quatre grans tipologies de països: rics i
+      contaminants, rics i nets, en desenvolupament, i d'ingressos baixos. La separació
+      no és intuïtiva — és empírica, treta de les dades.
+    </p>
+
+    <figure class="fig">
+      <img src="grafics_dark/4.5_clustering_paisos.png" alt="Clustering de països" loading="lazy" />
+      <figcaption>
+        <span class="fig-num">Figura 17 — clustering K-Means</span>
+        <span class="fig-title">Clústers de països segons emissions de CO₂ i desenvolupament humà.</span>
+        El contrast entre "rics i contaminants" (&gt;15 t/càpita) i "rics i nets" demostra
+        empíricament que el desacoblament és possible — el model nòrdic té petjada fins a
+        tres vegades inferior amb HDI molt alt.
+      </figcaption>
+    </figure>
+
+    <p>
+      Els clústers anteriors eren punts en un pla. Ara els mateixos països, sobre el mapa:
+      cada color combina HDI i CO₂ per càpita simultàniament. Els verds foscos concentren
+      alt desenvolupament amb alta petjada. Els blaus, alt HDI amb baix CO₂ — el model
+      que tots els altres haurien de seguir.
+    </p>
+
+    <figure class="fig paper">
+      <img src="grafics_dark/bivariate_map.png" alt="Bivariate choropleth" loading="lazy" />
+      <figcaption>
+        <span class="fig-num">Bivariate — choropleth</span>
+        <span class="fig-title">Mapa bivariat: dues variables sobre la mateixa geografia.</span>
+        Codifica dues variables alhora amb una paleta 2D. Els països més clars combinen
+        valors extrems en ambdues variables.
+      </figcaption>
+    </figure>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- §12 PCA + CORRELACIONS                                       slate  -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section id="pca" data-tone="blue">
+  <div class="container narrow fade-section">
+    <div class="eyebrow">§ 12 — estructura de les dades</div>
+    <h2>Totes les variables, <span style="color:var(--accent);font-style:normal">un sol gràfic</span></h2>
+    <p class="lead">
+      Si reduïm les nou variables del dataset a només dues dimensions amb un PCA, ja es veu
+      el mateix patró: l'eix horitzontal és essencialment "nivell de desenvolupament", i el
+      vertical separa com de net es desenvolupa un país.
+    </p>
+
+    <figure class="fig paper">
+      <img src="grafics_dark/pca_biplot.png" alt="PCA biplot sostenibilitat mundial" loading="lazy" />
+      <figcaption>
+        <span class="fig-num">PCA — biplot</span>
+        <span class="fig-title">Perfils de sostenibilitat mundial — anàlisi de components principals.</span>
+        PC1 (50,9%) + PC2 (16,6%) = 67,5% de la variància explicada. Les fletxes són
+        les variables originals projectades.
+      </figcaption>
+    </figure>
+
+    <p>
+      Fins aquí hem explorat les variables una per una. El SPLOM permet veure-les totes alhora:
+      cada cel·la és la relació entre dues variables, la diagonal mostra la distribució de cada una,
+      i els coeficients de Spearman quantifiquen la força de cada vincle. D'un sol cop d'ull:
+      CO₂, riquesa i salut estan fortament correlacionats — però Gini trenca el patró.
+    </p>
+
+    <figure class="fig paper">
+      <img src="grafics_dark/splom.png" alt="Scatter plot matrix" loading="lazy" />
+      <figcaption>
+        <span class="fig-num">SPLOM — scatterplot matrix</span>
+        <span class="fig-title">Matriu de dispersió de totes les parelles de variables.</span>
+        D'un cop d'ull, totes les correlacions entre variables — la diagonal mostra la
+        distribució individual i les caselles fora mostren les relacions bivariades.
+      </figcaption>
+    </figure>
+
+    <p>
+      El correlograma mostra la mateixa informació de manera més resumida. Vermell intens és
+      correlació positiva forta; blau intens, negativa. PIB i HDI: 0,96 — gairebé la mateixa
+      variable. Exportacions i desenvolupament: 0,91. La riquesa, la salut i el comerç formen
+      un sol bloc. Gini és l'excepció: correlaciona poc amb tot. La desigualtat és transversal
+      — n'hi ha en països rics i pobres, nets i contaminants.
+    </p>
+
+    <figure class="fig">
+      <img src="grafics_dark/3.7_heatmap_correlacions.png" alt="Heatmap correlacions" loading="lazy" />
+      <figcaption>
+        <span class="fig-num">Correlograma — heatmap</span>
+        <span class="fig-title">Matriu completa de correlacions Spearman entre variables.</span>
+        Versió compacta del SPLOM. Vermell intens = positiva forta; blau intens = negativa forta.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- §13 SPAIN vs SWEDEN                                           moss  -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section id="suecia" data-tone="green">
+  <div class="container narrow fade-section">
+    <div class="eyebrow">§ 13 — el cas de Suècia</div>
+    <h2>Espanya vs Suècia: <em>el cas d'estudi</em></h2>
+    <p class="lead">
+      Si volem provar que el desacoblament és real, necessitem un cas concret. Suècia ha
+      arribat al <strong>98,5% d'electricitat de fonts netes</strong> mantenint un PIB
+      per càpita superior a la mitjana europea. Comparem el seu camí amb el d'Espanya.
+    </p>
+
+
+    <figure class="fig paper">
+      <img src="grafics_dark/mix_electric_esp_swe.png" alt="Mix elèctric Espanya Suècia" loading="lazy" />
+      <figcaption>
+        <span class="fig-num">Mix elèctric — composició</span>
+        <span class="fig-title">Composició de la generació elèctrica: Espanya vs Suècia.</span>
+        El secret suec: hidràulica massiva + nuclear + renovables.
+      </figcaption>
+    </figure>
+
+    <figure class="fig paper">
+      <img src="grafics_dark/sectors_esp_swe.png" alt="Sectors emissions Esp-Swe" loading="lazy" />
+      <figcaption>
+        <span class="fig-num">Sectors — comparativa</span>
+        <span class="fig-title">Emissions per sector — Espanya vs Suècia.</span>
+        Quins sectors emeten més a cada país? La composició revela on cal focalitzar
+        polítiques de descarbonització.
+      </figcaption>
+    </figure>
+
+    <figure class="fig paper">
+      <img src="grafics_dark/projeccio_espanyaSuecia.png" alt="Projecció Espanya Suècia 2035" loading="lazy" />
+      <figcaption>
+        <span class="fig-num">Projecció — 2025–2035</span>
+        <span class="fig-title">Escenaris de descarbonització 2035.</span>
+        Projecció amb model GradientBoosting (R²=0,81). Si Espanya adoptés progressivament
+        el mix elèctric suec en deu anys, quins resultats obtindria?
+      </figcaption>
+    </figure>
+
+    <p class="pull">El desacoblament no és una utopia. És una política pública sostinguda durant trenta anys.</p>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- §14 CONCLUSIONS                                              sage   -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section id="conclusions" data-tone="orange">
+  <div class="container narrow fade-section">
+    <div class="eyebrow">§ 14 — síntesi</div>
+    <h2>Què hem confirmat, què hem refutat</h2>
+
+    <ul class="findings">
+      <li>
+        <span class="f-key">H1</span>
+        <div>
+          <h4 class="f-title">Riquesa i emissions</h4>
+          <p class="f-body">PIB i CO₂/càpita correlacionen positivament (Spearman 0,895). Però la dispersió mostra que <em>no és l'únic camí</em> — països rics amb baixa petjada existeixen.</p>
+        </div>
+        <span class="f-status confirmed">— confirmada</span>
+      </li>
+      <li>
+        <span class="f-key">H2</span>
+        <div>
+          <h4 class="f-title">Desenvolupament humà i CO₂</h4>
+          <p class="f-body">HDI i emissions també correlacionen (Spearman 0,870). Mateix patró: a major desenvolupament, més emissions, amb desviacions notables al nord d'Europa.</p>
+        </div>
+        <span class="f-status confirmed">— confirmada</span>
+      </li>
+      <li>
+        <span class="f-key">H3</span>
+        <div>
+          <h4 class="f-title">Emissions històriques</h4>
+          <p class="f-body">Els EUA i Europa concentren més del 75% del CO₂ acumulat des de 1850. La responsabilitat històrica és asimètrica.</p>
+        </div>
+        <span class="f-status confirmed">— confirmada</span>
+      </li>
+      <li>
+        <span class="f-key">H4</span>
+        <div>
+          <h4 class="f-title">Emissions i esperança de vida</h4>
+          <p class="f-body">Hi ha correlació (Spearman 0,750) però <em>no és causal</em>: ambdues són conseqüència del desenvolupament econòmic. El PIB és el factor de confusió.</p>
+        </div>
+        <span class="f-status nuanced">— matissada</span>
+      </li>
+      <li>
+        <span class="f-key">H5</span>
+        <div>
+          <h4 class="f-title">Comerç i deslocalització</h4>
+          <p class="f-body">Xina és exportador net d'emissions; EUA i Europa, importadors nets. El comerç internacional <em>sí</em> desplaça emissions cap a economies productores.</p>
+        </div>
+        <span class="f-status confirmed">— confirmada</span>
+      </li>
+      <li>
+        <span class="f-key">H6</span>
+        <div>
+          <h4 class="f-title">Data centers i IA</h4>
+          <p class="f-body">EUA i Xina alimenten el seu núvol majoritàriament amb fonts no renovables — 73% i 99,7%. L'evidència s'amplia, però mereix més dades específiques.</p>
+        </div>
+        <span class="f-status partial">— parcial</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- §15 TEAM                                                     olive  -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section id="team" data-tone="grey">
+  <div class="container narrow fade-section">
+    <div class="eyebrow">§ 15 — equip</div>
+    <h2>Grup 06 · DADM 2025–26</h2>
+    <p>
+      Aquest projecte forma part de l'assignatura Visualització de Dades del Grau d'Enginyeria
+      de Dades (UAB). Els repositoris de codi i dades es troben públics a GitHub.
+    </p>
+
+    <ul class="team-list">
+      <li>
+        <div class="member-name">Alícia Martí</div>
+        <div class="member-id">NIU 1702761</div>
+      </li>
+      <li>
+        <div class="member-name">Clara Priego</div>
+        <div class="member-id">NIU 1709846</div>
+      </li>
+      <li>
+        <div class="member-name">Oriol Vilà</div>
+        <div class="member-id">NIU 1711158</div>
+      </li>
+      <li>
+        <div class="member-name">Maria Siles</div>
+        <div class="member-id">NIU 1641129</div>
+      </li>
+      <li>
+        <div class="member-name">Mar Massanas</div>
+        <div class="member-id">NIU 1729269</div>
+      </li>
+    </ul>
+
+    
+    </ul>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<footer>
+  <div class="container">
+    <p>
+      <strong>Climate Explorer</strong> · Anàlisi global d'emissions de CO₂ ·
+      DADM <span id="year"></span> · Grup 06 · UAB
+      &nbsp;·&nbsp;
+      <a href="https://github.com/mariasiles/EmissionsCO2_Visualitzacio" target="_blank" rel="noopener">GitHub</a>
+    </p>
+    <p style="margin-top:8px;font-size:0.7rem;color:var(--text-dim)">
+      EB Garamond &amp; Inter &amp; JetBrains Mono · OWID · WHO · World Bank · UNDP
+    </p>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+
+<!-- SVG filter: invert PNG + transparent background for dark mode integration -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <defs>
+    <filter id="cp-darkmode" color-interpolation-filters="sRGB" x="0%" y="0%" width="100%" height="100%">
+      <feColorMatrix type="matrix" values="-1 0 0 0 1  0 -1 0 0 1  0 0 -1 0 1  0 0 0 1 0" result="inv"/>
+      <feColorMatrix in="inv" type="hueRotate" values="180" result="hued"/>
+      <feColorMatrix in="hued" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  15 15 15 0 -3"/>
+    </filter>
+  </defs>
+</svg>
+</body>
+</html>
