@@ -1,0 +1,79 @@
+/* ──────────────────────────────────────────────────────────────────────
+   CLIMATE EXPLORER — Light theme override
+   Imports the base dark design system and overrides with light tokens
+   ────────────────────────────────────────────────────────────────────── */
+
+@import url("style.css");
+
+:root {
+  /* ── canvas ────────────────────────────────────────────────────────── */
+  --bg:           #fff8f2;
+  --bg-soft:      #fdeee2;
+  --bg-elev:      #f8e4d4;
+  --bg-sunk:      #fdf2ea;
+
+  /* ── lines ──────────────────────────────────────────────────────────── */
+  --line:         rgba(20, 20, 20, 0.08);
+  --line-hi:      rgba(20, 20, 20, 0.18);
+
+  /* ── text ────────────────────────────────────────────────────────────── */
+  --text:         #1a1a1a;
+  --text-soft:    #3d3d3d;
+  --text-muted:   #666666;
+  --text-dim:     #aaaaaa;
+
+  /* ── accents stay the same but slightly more saturated on light ──────── */
+  --red:          #d94f4f;
+  --orange:       #c97b3a;
+  --yellow:       #a89040;
+  --green:        #4e8f38;
+  --teal:         #2f8f9c;
+  --blue:         #3a5fc4;
+  --purple:       #8040b0;
+  --pink:         #c44a7a;
+  --grey:         #777777;
+}
+
+/* ── nav: light glass ─────────────────────────────────────────────────── */
+.nav {
+  background: rgba(255, 248, 242, 0.93) !important;
+  border-bottom: 1px solid rgba(0,0,0,0.08) !important;
+}
+
+/* ── hero grid subtler on light ──────────────────────────────────────── */
+.hero-grid {
+  opacity: 0.04;
+}
+
+/* ── section divider ─────────────────────────────────────────────────── */
+section + section::before {
+  background: rgba(0, 0, 0, 0.07) !important;
+}
+
+/* ── cards / elevated surfaces ───────────────────────────────────────── */
+.card, .insight-box, .hyp-card, .step-card, .conc-card {
+  background: #ffffff !important;
+  border-color: rgba(0,0,0,0.09) !important;
+}
+
+/* ── mono / code ─────────────────────────────────────────────────────── */
+.mono, code {
+  background: rgba(0,0,0,0.05) !important;
+  color: var(--text-soft) !important;
+}
+
+/* ── selection ───────────────────────────────────────────────────────── */
+::selection { background: var(--accent); color: #ffffff; }
+
+/* ── figure caption ─────────────────────────────────────────────────── */
+.fig-caption, figcaption {
+  color: var(--text-muted) !important;
+}
+
+/* ── scroll progress stays accent color — no change needed ────────────── */
+
+/* ── footer ──────────────────────────────────────────────────────────── */
+footer {
+  background: #f5e0ce !important;
+  border-top: 1px solid rgba(0,0,0,0.08) !important;
+}
