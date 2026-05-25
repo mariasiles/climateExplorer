@@ -17,10 +17,10 @@
   --line-hi:      rgba(20, 20, 20, 0.18);
 
   /* ── text ────────────────────────────────────────────────────────────── */
-  --text:         #1a1a1a;
-  --text-soft:    #3d3d3d;
-  --text-muted:   #666666;
-  --text-dim:     #aaaaaa;
+  --text:         #111111;
+  --text-soft:    #1a1a1a;
+  --text-muted:   #2a2a2a;
+  --text-dim:     #444444;
 
   /* ── accents stay the same but slightly more saturated on light ──────── */
   --red:          #d94f4f;
@@ -57,9 +57,9 @@ section + section::before {
 }
 
 /* ── mono / code ─────────────────────────────────────────────────────── */
-.mono, code {
-  background: rgba(0,0,0,0.05) !important;
-  color: var(--text-soft) !important;
+.mono, code, .mono-tag {
+  background: rgba(139,26,26,0.07) !important;
+  color: #8b1a1a !important;
 }
 
 /* ── selection ───────────────────────────────────────────────────────── */
@@ -67,7 +67,14 @@ section + section::before {
 
 /* ── figure caption ─────────────────────────────────────────────────── */
 .fig-caption, figcaption {
-  color: var(--text-muted) !important;
+  color: #1a1a1a !important;
+}
+
+/* ── blockquote: mateixa font que .lead (sense cursiva) ─────────────── */
+blockquote {
+  font-style: normal !important;
+  font-weight: 300 !important;
+  letter-spacing: -0.012em !important;
 }
 
 /* ── scroll progress stays accent color — no change needed ────────────── */
@@ -76,4 +83,45 @@ section + section::before {
 footer {
   background: #f5e0ce !important;
   border-top: 1px solid rgba(0,0,0,0.08) !important;
+}
+
+/* ── hero títol em: vermell fosc ─────────────────────────────────────── */
+.hero h1 em {
+  color: #8b1a1a !important;
+}
+
+/* ── hero h1: font llegible i negreta ────────────────────────────────── */
+.hero h1 {
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+}
+
+/* ── eyebrow: mateix color que em ───────────────────────────────────── */
+.eyebrow {
+  color: #8b1a1a !important;
+}
+
+/* ── hipòtesis: número més gran i negreta ────────────────────────────── */
+.hypothesis-list .h-num {
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.06em !important;
+}
+
+/* ── findings: H1 H2… més gran i negreta ────────────────────────────── */
+.findings .f-key {
+  font-size: 1.2rem !important;
+  font-weight: 700 !important;
+}
+
+/* ── findings: confirmada / matissada més gran i negreta ─────────────── */
+.findings .f-status {
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+}
+
+/* ── elimina filtre dark mode de les imatges paper ───────────────────── */
+figure.fig.paper img {
+  filter: none !important;
 }
